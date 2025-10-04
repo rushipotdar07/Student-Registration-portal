@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICRE College - Student Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Welcome Page Styles */
+        .welcome-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .college-logo {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .college-logo::before {
+            content: "ICRE";
+        }
+
+        .welcome-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(238, 90, 36, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            display: none;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-row.full-width {
+            flex-direction: column;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .otp-section {
+            display: none;
+            text-align: center;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* File Upload Styles */
+        .file-upload-container {
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-container:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-container.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-upload-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-button {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .uploaded-files {
+            margin-top: 15px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .remove-file {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+        }
+
+        .resend-otp {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resend-otp:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Error/Success messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .tab-navigation {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .form-container {
+                margin: 10px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+
+
+        /* Admin Modal Specific Styles */
+        #adminModal .modal-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        #adminModal .modal-header h3 {
+            color: white;
+        }
+
+        #adminModal .btn-primary {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        #adminModal .btn-primary:hover {
+            background: linear-gradient(45deg, #1fc94f, #89b3dc);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Welcome Page -->
+    <div id="welcomePage" class="welcome-page">
+        <div class="college-logo"></div>
+        <h1 class="welcome-title">Welcome to ICRE College</h1>
+        <p class="welcome-subtitle">Begin your journey towards academic excellence and personal growth. Join thousands
+            of students who have chosen to build their future with us.</p>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="openModal('registerModal')">Register</button>
+            <button class="btn btn-secondary" onclick="openModal('loginModal')">Already Registered? Login</button>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Your Account</h3>
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="registerForm">
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" class="form-control" placeholder="Enter your full name"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email Address</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPhone">Phone Number</label>
+                        <input type="tel" id="regPhone" class="form-control" placeholder="Enter your phone number"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" class="form-control"
+                            placeholder="Create a strong password" required>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 25px;" onclick="sendOTP()">Send OTP
+                        & Register</button>
+                </div>
+
+                <div id="otpSection" class="otp-section">
+                    <h4>Verify Your Email</h4>
+                    <p>We've sent a 4-digit code to your email id</p>
+                    <div class="otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;"
+                        onclick="verifyOTP()">Verify & Complete Registration</button>
+                    <a href="#" class="resend-otp" onclick="resendOTP()">Didn't receive code? Resend</a>
+                </div>
+
+                <div class="loading" id="registerLoading">
+                    <div class="spinner"></div>
+                    <p>Processing registration...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password"
+                        required>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 25px;" onclick="login()">Login</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a id="forgetPassword" href="#" class="resend-otp">Forgot Password?</a>
+                </div>
+
+                <div class="loading" id="loginLoading">
+                    <div class="spinner"></div>
+                    <p>Logging in...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Form Container -->
+    <div id="formContainer" class="form-container">
+        <div class="form-header">
+            <h2>Student Registration Form</h2>
+            <p>Please fill in all the required information accurately</p>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="showTab(0)">Basic Details</button>
+            <button class="tab-btn" onclick="showTab(1)">Parent Details</button>
+            <button class="tab-btn" onclick="showTab(2)">Education</button>
+            <button class="tab-btn" onclick="showTab(3)">Certificates</button>
+        </div>
+
+        <!-- Tab 1: Basic Details -->
+        <div class="tab-content active">
+            <h3 style="margin-bottom: 30px; color: #333;">Basic Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth *</label>
+                    <input type="date" id="dateOfBirth" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender *</label>
+                    <select id="gender" class="form-control" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row full-width">
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <textarea id="address" class="form-control" rows="3" required></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="pincode">PIN Code *</label>
+                    <input type="text" id="pincode" class="form-control" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Parent Details -->
+        <div class="tab-content">
+            <h3 style="margin-bottom: 30px; color: #333;">Parent/Guardian Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fatherName">Father's Name *</label>
+                    <input type="text" id="fatherName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="fatherOccupation">Father's Occupation</label>
+                    <input type="text" id="fatherOccupation" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="motherName">Mother's Name *</label>
+                    <input type="text" id="motherName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="motherOccupation">Mother's Occupation</label>
+                    <input type="text" id="motherOccupation" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="guardianPhone">Guardian Phone Number *</label>
+                    <input type="tel" id="guardianPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="guardianEmail">Guardian Email</label>
+                    <input type="email" id="guardianEmail" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="annualIncome">Annual Family Income</label>
+                    <select id="annualIncome" class="form-control">
+                        <option value="">Select Income Range</option>
+                        <option value="below-2">Below ₹2 Lakhs</option>
+                        <option value="2-5">₹2-5 Lakhs</option>
+                        <option value="5-10">₹5-10 Lakhs</option>
+                        <option value="above-10">Above ₹10 Lakhs</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="relationship">Relationship</label>
+                    <select id="relationship" class="form-control">
+                        <option value="">Select Relationship</option>
+                        <option value="father">Father</option>
+                        <option value="mother">Mother</option>
+                        <option value="guardian">Legal Guardian</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Education -->
+        <div class="tab-content">
+            <h3 style="margin-bottom: 30px; color: #333;">Educational Background</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastSchool">Last School/College Attended *</label>
+                    <input type="text" id="lastSchool" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="boardUniversity">Board/University *</label>
+                    <input type="text" id="boardUniversity" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="passingYear">Year of Passing *</label>
+                    <input type="number" id="passingYear" class="form-control" min="2010" max="2025" required>
+                </div>
+                <div class="form-group">
+                    <label for="percentage">Percentage/CGPA *</label>
+                    <input type="text" id="percentage" class="form-control" placeholder="e.g., 85% or 8.5 CGPA"
+                        required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="stream">Stream/Specialization</label>
+                    <input type="text" id="stream" class="form-control" placeholder="e.g., Science, Commerce, Arts">
+                </div>
+                <div class="form-group">
+                    <label for="rollNumber">Roll Number</label>
+                    <input type="text" id="rollNumber" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="courseApplying">Course Applying For *</label>
+                    <select id="courseApplying" class="form-control" required>
+                        <option value="">Select Diploma Course</option>
+                        <option value="Computer">Computer</option>
+                        <option value="ENTC">ENTC</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="preferredBranch">Preferred Branch</label>
+                    <input type="text" id="preferredBranch" class="form-control"
+                        placeholder="e.g., Computer Science, Mechanical">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Additional Certificates -->
+        <div class="tab-content">
+            <h3 style="margin-bottom: 30px; color: #333;">Additional Certificates & Achievements</h3>
+
+            <div class="form-row full-width">
+                <div class="form-group">
+                    <label for="achievements">Academic Achievements</label>
+                    <textarea id="achievements" class="form-control" rows="3"
+                        placeholder="List any academic achievements, awards, or recognitions"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row full-width">
+                <div class="form-group">
+                    <label for="extracurricular">Extracurricular Activities</label>
+                    <textarea id="extracurricular" class="form-control" rows="3"
+                        placeholder="Sports, cultural activities, volunteer work, etc."></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- <div class="form-group">
+                    <label for="competitiveExams">Competitive Exam Scores</label>
+                    <input type="text" id="competitiveExams" class="form-control" placeholder="JEE, NEET, CAT, etc.">
+                </div> -->
+                <div class="form-group">
+                    <label for="hobbies">Hobbies & Interests</label>
+                    <input type="text" id="hobbies" class="form-control" placeholder="Sports, Music, Reading etc.">
+                </div>
+            </div>
+
+            <!-- Certificate Upload Section -->
+            <div class="form-row full-width">
+                <div class="form-group">
+                    <label>Upload Certificates</label>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">
+                        Upload your academic certificates, mark sheets, ID proof, and other relevant documents.
+                        <br>Supported formats: PDF, JPG, PNG (Max size: 5MB per file)
+                    </p>
+
+                    <div class="file-upload-container" onclick="document.getElementById('certificateUpload').click()"
+                        ondrop="handleDrop(event)" ondragover="handleDragOver(event)"
+                        ondragleave="handleDragLeave(event)">
+                        <div class="file-upload-text">
+                            <strong>Click to upload</strong> or drag and drop files here
+                        </div>
+                        <button type="button" class="file-upload-button">Choose Files</button>
+                        <input type="file" id="certificateUpload" class="file-upload-input" multiple
+                            accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
+                    </div>
+
+                    <div id="uploadedFiles" class="uploaded-files"></div>
+                </div>
+            </div>
+
+            <button class="submit-btn" style="display: flex; justify-items: center;" onclick="submitForm()">Submit
+                Application</button>
+            <div class="loading" id="submitLoading">
+                <div class="spinner"></div>
+                <p>Submitting your application...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Admin Login</h3>
+                <span class="close" onclick="closeModal('adminModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" id="adminUsername" class="form-control" placeholder="Enter admin username"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password"
+                        required>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 25px;" onclick="adminLogin()">Login as
+                    Admin</button>
+
+                <div class="loading" id="adminLoading">
+                    <div class="spinner"></div>
+                    <p>Logging in...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        let generatedOTP = '';
+        let currentUser = null;
+        let uploadedCertificates = [];
+
+        // API Base URL - Change this to your server URL
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Utility function to show/hide loading indicators
+        function showLoading(elementId) {
+            document.getElementById(elementId).style.display = 'block';
+        }
+
+        function hideLoading(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+        }
+
+        // Utility function to show alerts
+        function showAlert(message, type = 'error') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+
+            // Insert at the top of the modal body or form
+            const container = document.querySelector('.modal-body') || document.querySelector('.tab-content.active');
+            container.insertBefore(alertDiv, container.firstChild);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // File upload functions
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            processFiles(files);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const container = event.currentTarget;
+            container.classList.remove('dragover');
+
+            const files = Array.from(event.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function processFiles(files) {
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            files.forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    showAlert(`File "${file.name}" is not supported. Please upload PDF, JPG, or PNG files.`);
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    showAlert(`File "${file.name}" is too large. Maximum size allowed is 5MB.`, 'error');
+                    return;
+                }
+
+                const fileObj = {
+                    file: file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    id: Date.now() + Math.random()
+                };
+
+                uploadedCertificates.push(fileObj);
+                displayUploadedFiles();
+            });
+
+            // Clear the input
+            document.getElementById('certificateUpload').value = '';
+        }
+
+        function displayUploadedFiles() {
+            const container = document.getElementById('uploadedFiles');
+            container.innerHTML = '';
+
+            uploadedCertificates.forEach(fileObj => {
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'uploaded-file';
+                fileDiv.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">${getFileIcon(fileObj.type)}</div>
+                        <div>
+                            <div style="font-weight: 600;">${fileObj.name}</div>
+                            <div style="font-size: 0.8em; color: #666;">${formatFileSize(fileObj.size)}</div>
+                        </div>
+                    </div>
+                    <button class="remove-file" onclick="removeFile('${fileObj.id}')">Remove</button>
+                `;
+                container.appendChild(fileDiv);
+            });
+        }
+
+        function getFileIcon(type) {
+            if (type === 'application/pdf') return 'PDF';
+            if (type.startsWith('image/')) return 'IMG';
+            return 'DOC';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(fileId) {
+            uploadedCertificates = uploadedCertificates.filter(file => file.id != fileId);
+            displayUploadedFiles();
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Clear any alerts
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Registration and OTP functions
+        async function sendOTP() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!name || !email || !phone || !password) {
+                showAlert('Please fill in all fields');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showAlert('Please enter a valid email address');
+                return;
+            }
+
+            if (!validatePhone(phone)) {
+                showAlert('Please enter a valid 10-digit phone number');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long');
+                return;
+            }
+
+            showLoading('registerLoading');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading('registerLoading');
+
+                if (data.success) {
+                    generatedOTP = data.otp; // In production, this would be sent via SMS
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('otpSection').style.display = 'block';
+                } else {
+                    showAlert(data.message || 'Failed to send OTP');
+                }
+            } catch (error) {
+                hideLoading('registerLoading');
+                showAlert('Network error. Please try again.');
+                console.error('Error sending OTP:', error);
+            }
+        }
+
+        function moveToNext(current, nextIndex) {
+            if (current.value.length === 1 && nextIndex <= 4) {
+                const nextInput = document.querySelectorAll('.otp-input')[nextIndex - 1];
+                if (nextInput) {
+                    nextInput.focus();
+                }
+            }
+        }
+
+        async function verifyOTP() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            let enteredOTP = '';
+
+            otpInputs.forEach(input => {
+                enteredOTP += input.value;
+            });
+
+            if (enteredOTP.length !== 4) {
+                showAlert('Please enter the complete 4-digit OTP');
+                return;
+            }
+
+            showLoading('registerLoading');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        otp: enteredOTP,
+                        phone: document.getElementById('regPhone').value,
+                        name: document.getElementById('regName').value,
+                        email: document.getElementById('regEmail').value,
+                        password: document.getElementById('regPassword').value
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading('registerLoading');
+
+                if (data.success) {
+                    currentUser = data.user;
+                    showAlert('Registration successful! Please complete your profile.', 'success');
+                    setTimeout(() => {
+                        closeModal('registerModal');
+                        showMainForm();
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Invalid OTP. Please try again.');
+                }
+            } catch (error) {
+                hideLoading('registerLoading');
+                showAlert('Network error. Please try again.');
+                console.error('Error verifying OTP:', error);
+            }
+        }
+
+        async function resendOTP() {
+            const phone = document.getElementById('regPhone').value;
+            if (!phone) {
+                showAlert('Phone number not found. Please restart registration.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/resend-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phone })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    generatedOTP = data.otp;
+                    showAlert(data.message || 'Failed to resend OTP');
+                }
+            } catch (error) {
+                showAlert('Network error. Please try again.');
+                console.error('Error resending OTP:', error);
+            }
+        }
+
+        // Login function
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showAlert('Please fill in all fields');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showAlert('Please enter a valid email address');
+                return;
+            }
+
+            showLoading('loginLoading');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                hideLoading('loginLoading');
+
+                if (data.success) {
+                    currentUser = data.user;
+                    showAlert('Login successful!', 'success');
+                    setTimeout(() => {
+                        closeModal('loginModal');
+                        showMainForm();
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Invalid credentials');
+                }
+            } catch (error) {
+                hideLoading('loginLoading');
+                showAlert('Network error. Please try again.');
+                console.error('Error logging in:', error);
+            }
+        }
+
+        // Show main form
+        function showMainForm() {
+            document.getElementById('welcomePage').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'block';
+
+            // Pre-fill basic details if user is logged in
+            if (currentUser) {
+                document.getElementById('firstName').value = currentUser.name.split(' ')[0] || '';
+                document.getElementById('lastName').value = currentUser.name.split(' ').slice(1).join(' ') || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('phone').value = currentUser.phone || '';
+            }
+        }
+
+        // Tab navigation
+        function showTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            tabs[tabIndex].classList.add('active');
+            tabButtons[tabIndex].classList.add('active');
+
+            currentTab = tabIndex;
+        }
+
+
+        // Form submission
+        async function submitForm() {
+            if (!validateForm()) {
+                return;
+            }
+
+            showLoading('submitLoading');
+
+            try {
+                // Create FormData object for file upload support
+                const formData = new FormData();
+
+                // Basic details
+                formData.append('firstName', document.getElementById('firstName').value.trim());
+                formData.append('lastName', document.getElementById('lastName').value.trim());
+                formData.append('dateOfBirth', document.getElementById('dateOfBirth').value);
+                formData.append('gender', document.getElementById('gender').value);
+                formData.append('email', document.getElementById('email').value.trim());
+                formData.append('phone', document.getElementById('phone').value.trim());
+                formData.append('address', document.getElementById('address').value.trim());
+                formData.append('city', document.getElementById('city').value.trim());
+                formData.append('pincode', document.getElementById('pincode').value.trim());
+
+                // Parent details
+                formData.append('fatherName', document.getElementById('fatherName').value.trim());
+                formData.append('fatherOccupation', document.getElementById('fatherOccupation').value.trim());
+                formData.append('motherName', document.getElementById('motherName').value.trim());
+                formData.append('motherOccupation', document.getElementById('motherOccupation').value.trim());
+                formData.append('guardianPhone', document.getElementById('guardianPhone').value.trim());
+                formData.append('guardianEmail', document.getElementById('guardianEmail').value.trim());
+                formData.append('annualIncome', document.getElementById('annualIncome').value);
+                formData.append('relationship', document.getElementById('relationship').value);
+
+                // Education details
+                formData.append('lastSchool', document.getElementById('lastSchool').value.trim());
+                formData.append('boardUniversity', document.getElementById('boardUniversity').value.trim());
+                formData.append('passingYear', document.getElementById('passingYear').value);
+                formData.append('percentage', document.getElementById('percentage').value.trim());
+                formData.append('stream', document.getElementById('stream').value.trim());
+                formData.append('rollNumber', document.getElementById('rollNumber').value.trim());
+                formData.append('courseApplying', document.getElementById('courseApplying').value);
+                formData.append('preferredBranch', document.getElementById('preferredBranch').value.trim());
+
+                // Additional details
+                formData.append('achievements', document.getElementById('achievements').value.trim());
+                formData.append('extracurricular', document.getElementById('extracurricular').value.trim());
+                formData.append('hobbies', document.getElementById('hobbies').value.trim());
+
+                // Add uploaded files
+                uploadedCertificates.forEach((fileObj) => {
+                    formData.append('certificates', fileObj.file);
+                });
+
+                // Add user ID if available
+                if (currentUser && currentUser.id) {
+                    formData.append('userId', currentUser.id);
+                }
+
+                console.log('Submitting form with', uploadedCertificates.length, 'certificates');
+
+                const response = await fetch(`${API_BASE}/student/register`, {
+                    method: 'POST',
+                    body: formData
+                    // Don't set Content-Type header - let browser set it for FormData
+                });
+
+                const data = await response.json();
+                hideLoading('submitLoading');
+
+                if (data.success) {
+                    showAlert(`Application submitted successfully! Your Application ID: ${data.applicationId}`, 'success');
+
+                    // Show application details
+                    alert(`✅ Application Submitted Successfully!\n\nApplication ID: ${data.applicationId}\nStudent ID: ${data.studentId}\nUploaded Files: ${data.uploadedFiles}\n\nPlease save your Application ID for future reference.`);
+
+                    // Reset form or redirect
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    showAlert(data.message || 'Failed to submit application', 'error');
+                }
+            } catch (error) {
+                hideLoading('submitLoading');
+                showAlert('Network error. Please try again.', 'error');
+                console.error('Error submitting form:', error);
+            }
+        }
+
+
+        // Update the validation function to be more specific
+        function validateForm() {
+            const requiredFields = [
+                { id: 'firstName', name: 'First Name' },
+                { id: 'lastName', name: 'Last Name' },
+                { id: 'dateOfBirth', name: 'Date of Birth' },
+                { id: 'gender', name: 'Gender' },
+                { id: 'email', name: 'Email Address' },
+                { id: 'phone', name: 'Phone Number' },
+                { id: 'address', name: 'Address' },
+                { id: 'city', name: 'City' },
+                { id: 'pincode', name: 'PIN Code' },
+                { id: 'fatherName', name: 'Father\'s Name' },
+                { id: 'motherName', name: 'Mother\'s Name' },
+                { id: 'guardianPhone', name: 'Guardian Phone Number' },
+                { id: 'lastSchool', name: 'Last School/College' },
+                { id: 'boardUniversity', name: 'Board/University' },
+                { id: 'passingYear', name: 'Year of Passing' },
+                { id: 'percentage', name: 'Percentage/CGPA' },
+                { id: 'courseApplying', name: 'Course Applying For' }
+            ];
+
+            for (let field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element.value.trim()) {
+                    showAlert(`Please fill in the ${field.name}`, 'error');
+                    navigateToFieldTab(field.id);
+                    element.focus();
+                    return false;
+                }
+            }
+
+            // Additional validations
+            if (!validateEmail(document.getElementById('email').value)) {
+                showAlert('Please enter a valid email address', 'error');
+                showTab(0);
+                document.getElementById('email').focus();
+                return false;
+            }
+
+            if (!validatePhone(document.getElementById('phone').value)) {
+                showAlert('Please enter a valid 10-digit phone number', 'error');
+                showTab(0);
+                document.getElementById('phone').focus();
+                return false;
+            }
+
+            if (!validatePhone(document.getElementById('guardianPhone').value)) {
+                showAlert('Please enter a valid guardian phone number', 'error');
+                showTab(1);
+                document.getElementById('guardianPhone').focus();
+                return false;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const passingYear = parseInt(document.getElementById('passingYear').value);
+            if (passingYear < 2010 || passingYear > currentYear) {
+                showAlert('Please enter a valid passing year', 'error');
+                showTab(2);
+                document.getElementById('passingYear').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+
+        // Navigate to tab containing a specific field
+        function navigateToFieldTab(fieldId) {
+            const field = document.getElementById(fieldId);
+            const tabContent = field.closest('.tab-content');
+            const tabIndex = Array.from(document.querySelectorAll('.tab-content')).indexOf(tabContent);
+            showTab(tabIndex);
+        }
+
+        // Validation helper functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^[6-9]\d{9}$/;
+            return phoneRegex.test(phone);
+        }
+
+        // Auto-advance OTP inputs
+        document.addEventListener('DOMContentLoaded', function () {
+            const otpInputs = document.querySelectorAll('.otp-input');
+
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', function () {
+                    if (this.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+        });
+
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set max date for date of birth (18+ years old)
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            document.getElementById('dateOfBirth').max = maxDate.toISOString().split('T')[0];
+
+            // Clear any existing alerts on modal close
+            document.querySelectorAll('.close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function () {
+                    const alerts = document.querySelectorAll('.alert');
+                    alerts.forEach(alert => alert.remove());
+                });
+            });
+        });
+    </script>
+
+    <!-- Admin login functionality -->
+    <script>
+        document.addEventListener('keydown', function (event) {
+            // Check if Shift + A is pressed
+            if (event.shiftKey && event.key === 'A') {
+                event.preventDefault();
+                openModal('adminModal');
+            }
+        });
+
+        async function adminLogin() {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+
+            if (!username || !password) {
+                showAlert('Please fill in all fields');
+                return;
+            }
+
+            const defaultAdminUsername = '@Icreadmin';
+            const defaultAdminPassword = 'icre@9156';
+
+            showLoading('adminLoading');
+
+            setTimeout(async () => {
+                try {
+
+                    if (username === defaultAdminUsername && password === defaultAdminPassword) {
+                        hideLoading('adminLoading');
+                        showAlert('Admin login successful!', 'success');
+                        setTimeout(() => {
+                            closeModal('adminModal');
+                            window.location.href = 'admin1.html';
+                        }, 1500);
+                        return;
+                    }
+
+                    // If not default credentials, make API call
+                    const response = await fetch(`${API_BASE}/auth/admin-login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+                    hideLoading('adminLoading');
+
+                    if (data.success) {
+                        showAlert('Admin login successful!', 'success');
+                        // Store admin token if needed
+                        localStorage.setItem('adminToken', data.token);
+                        setTimeout(() => {
+                            closeModal('adminModal');
+                            window.location.href = 'admin.html';
+                        }, 1500);
+                    } else {
+                        showAlert(data.message || 'Invalid admin credentials');
+                    }
+                } catch (error) {
+                    hideLoading('adminLoading');
+                    showAlert('Network error. Please try again.');
+                    console.error('Error in admin login:', error);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

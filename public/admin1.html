@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICRE College Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .admin-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 150px;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .data-table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        .table-header h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        #recordCount {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+            font-weight: 700;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .sortable:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .sortable:after {
+            content: '↕';
+            position: absolute;
+            right: 8px;
+            opacity: 0.5;
+        }
+
+        .sortable.sort-asc:after {
+            content: '↑';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        .sortable.sort-desc:after {
+            content: '↓';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+
+        .status-edit_locked {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .student-details {
+            display: grid;
+            gap: 25px;
+        }
+
+        .detail-section {
+            background: #f8f9fc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .detail-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .controls-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .data-table {
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+
+            .detail-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>ICRE College Admin Panel</h1>
+            <p>View and manage student applications</p>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label for="searchInput">Search Students</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by name, email, phone, or application ID">
+                </div>
+                <div class="control-group">
+                    <label for="branchFilter">Filter by Course</label>
+                    <select id="branchFilter" class="form-control">
+                        <option value="">All Courses</option>
+                        <option value="Computer">Computer</option>
+                        <option value="ENTC">ENTC</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="statusFilter">Filter by Status</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="edit_locked">Edit Locked</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button class="btn" onclick="refreshData()">Refresh Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeStudents">0</div>
+                <div class="stat-label">Active Forms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="lockedStudents">0</div>
+                <div class="stat-label">Edit Locked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="computerStudents">0</div>
+                <div class="stat-label">Computer Branch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="civilStudents">0</div>
+                <div class="stat-label">Civil Branch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="MechanicalStudents">0</div>
+                <div class="stat-label">Mechanical Branch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ElectricalStudents">0</div>
+                <div class="stat-label">Electrical Branch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ENTCStudents">0</div>
+                <div class="stat-label">ENTC Branch</div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-container">
+            <div class="table-header">
+                <h3>Student Applications</h3>
+                <div>
+                    <span id="recordCount">0 records found</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    Loading student data...
+                </div>
+                <table class="data-table" id="studentsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="application_id">Application ID</th>
+                            <th class="sortable" data-column="first_name">Name</th>
+                            <th class="sortable" data-column="email">Email</th>
+                            <th class="sortable" data-column="phone">Phone</th>
+                            <th class="sortable" data-column="course_applying">Course</th>
+                            <th class="sortable" data-column="percentage">Percentage</th>
+                            <th class="sortable" data-column="status">Status</th>
+                            <th class="sortable" data-column="submitted_at">Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                    </tbody>
+                </table>
+                <div class="no-data" id="noDataMessage" style="display: none;">
+                    No student applications found.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Student Application Details</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="studentModalBody">
+                <!-- Student details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let studentsData = [];
+        let filteredData = [];
+        let currentSort = { column: 'submitted_at', direction: 'desc' };
+
+        // API Base URL
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Load students data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', filterAndDisplayStudents);
+            document.getElementById('branchFilter').addEventListener('change', filterAndDisplayStudents);
+            document.getElementById('statusFilter').addEventListener('change', filterAndDisplayStudents);
+            
+            // Add sort functionality
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.addEventListener('click', function() {
+                    sortStudents(this.dataset.column);
+                });
+            });
+        });
+
+        // Load students from API
+        async function loadStudents() {
+            try {
+                showLoading(true);
+                const response = await fetch(`${API_BASE}/student/`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    studentsData = data.students1 || [];
+                    updateStatistics();
+                    filterAndDisplayStudents();
+                } else {
+                    showError('Failed to load student data');
+                    loadDemoData(); // Fallback to demo data
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                showError('Network error. Loading demo data...');
+                loadDemoData(); // Fallback to demo data
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+            document.getElementById('studentsTable').style.display = show ? 'none' : 'table';
+        }
+
+        // Update statistics cards
+        function updateStatistics() {
+            const total = studentsData.length;
+            const active = studentsData.filter(s => s.status === 'active').length;
+            const locked = studentsData.filter(s => s.status === 'edit_locked').length;
+            const computer = studentsData.filter(s => s.course_applying === 'Computer').length;
+            const civil = studentsData.filter(s => s.course_applying === 'Civil').length;
+            const Mechanical = studentsData.filter(s => s.course_applying === 'Mechanical').length;
+            const Electrical = studentsData.filter(s => s.course_applying === 'Electrical').length;
+            const ENTC = studentsData.filter(s => s.course_applying === 'ENTC').length;
+
+
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('activeStudents').textContent = active;
+            document.getElementById('lockedStudents').textContent = locked;
+            document.getElementById('computerStudents').textContent = computer;            
+            document.getElementById('civilStudents').textContent = civil;            
+            document.getElementById('MechanicalStudents').textContent = Mechanical;            
+            document.getElementById('ElectricalStudents').textContent = Electrical;            
+            document.getElementById('ENTCStudents').textContent = ENTC;
+        }
+
+        // Filter and display students
+        function filterAndDisplayStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const branchFilter = document.getElementById('branchFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            filteredData = studentsData.filter(student => {
+                const matchesSearch = !searchTerm || 
+                    student.first_name?.toLowerCase().includes(searchTerm) ||
+                    student.last_name?.toLowerCase().includes(searchTerm) ||
+                    student.email?.toLowerCase().includes(searchTerm) ||
+                    student.phone?.includes(searchTerm) ||
+                    student.application_id?.toLowerCase().includes(searchTerm);
+
+                const matchesBranch = !branchFilter || student.course_applying === branchFilter;
+                const matchesStatus = !statusFilter || student.status === statusFilter;
+
+                return matchesSearch && matchesBranch && matchesStatus;
+            });
+
+            // Sort the filtered data
+            sortFilteredData();
+            displayStudents();
+        }
+
+        // Sort students
+        function sortStudents(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            // Update sort indicators
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            const currentTh = document.querySelector(`[data-column="${column}"]`);
+            currentTh.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+
+            sortFilteredData();
+            displayStudents();
+        }
+
+        // Sort filtered data
+        function sortFilteredData() {
+            filteredData.sort((a, b) => {
+                let aVal = a[currentSort.column] || '';
+                let bVal = b[currentSort.column] || '';
+
+                // Handle date sorting
+                if (currentSort.column === 'submitted_at') {
+                    aVal = new Date(aVal);
+                    bVal = new Date(bVal);
+                }
+
+                // Handle numeric sorting
+                if (currentSort.column === 'percentage') {
+                    aVal = parseFloat(aVal) || 0;
+                    bVal = parseFloat(bVal) || 0;
+                }
+
+                if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Display students in table
+        function displayStudents() {
+            const tbody = document.getElementById('studentsTableBody');
+            const noDataMsg = document.getElementById('noDataMessage');
+            const recordCount = document.getElementById('recordCount');
+
+            recordCount.textContent = `${filteredData.length} record(s) found`;
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '';
+                noDataMsg.style.display = 'block';
+                document.getElementById('studentsTable').style.display = 'none';
+                return;
+            }
+
+            noDataMsg.style.display = 'none';
+            document.getElementById('studentsTable').style.display = 'table';
+
+            tbody.innerHTML = filteredData.map(student => `
+                <tr>
+                    <td><strong>${student.application_id}</strong></td>
+                    <td>${student.first_name} ${student.last_name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.phone}</td>
+                    <td>${student.course_applying || 'N/A'}</td>
+                    <td>${student.percentage || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${student.status}">
+                            ${student.status === 'active' ? 'Active' : 'Edit Locked'}
+                        </span>
+                    </td>
+                    <td>${formatDate(student.submitted_at)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm" onclick="viewStudent('${student.application_id}')">View</button>
+                            ${student.status === 'edit_locked' ? `
+                                <button class="btn btn-success btn-sm" onclick="openForEdit('${student.application_id}')">Open for Edit</button>
+                            ` : `
+                                <button class="btn btn-warning btn-sm" onclick="lockForEdit('${student.application_id}')">Lock for Edit</button>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // View student details
+        async function viewStudent(applicationId) {
+            try {
+                const response = await fetch(`${API_BASE}/student/${applicationId}`);
+                if (!response.ok) {
+                    // If API fails, find from local data
+                    const student = studentsData.find(s => s.application_id === applicationId);
+                    if (student) {
+                        displayStudentModal(student);
+                        return;
+                    }
+                    throw new Error('Student not found');
+                }
+                
+                const data = await response.json();
+                if (data.success) {
+                    displayStudentModal(data.student);
+                } else {
+                    showError('Failed to load student details');
+                }
+            } catch (error) {
+                console.error('Error loading student details:', error);
+                // Fallback to local data
+                const student = studentsData.find(s => s.application_id === applicationId);
+                if (student) {
+                    displayStudentModal(student);
+                } else {
+                    showError('Failed to load student details');
+                }
+            }
+        }
+
+        // Display student in modal
+        function displayStudentModal(student) {
+            const modalBody = document.getElementById('studentModalBody');
+            
+            modalBody.innerHTML = `
+                <div class="student-details">
+                    <div class="detail-section">
+                        <h4>Basic Information</h4>
+                        <div class="detail-item">
+                            <span class="detail-label">Application ID:</span>
+                            <span class="detail-value"><strong>${student.application_id}</strong></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">${student.first_name} ${student.last_name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date of Birth:</span>
+                            <span class="detail-value">${formatDate(student.date_of_birth)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gender:</span>
+                            <span class="detail-value">${student.gender}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">${student.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value">${student.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value">${student.address}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">City:</span>
+                            <span class="detail-value">${student.city}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">PIN Code:</span>
+                            <span class="detail-value">${student.pincode}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>Parent/Guardian Information</h4>
+                        <div class="detail-item">
+                            <span class="detail-label">Father's Name:</span>
+                            <span class="detail-value">${student.father_name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Father's Occupation:</span>
+                            <span class="detail-value">${student.father_occupation || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Mother's Name:</span>
+                            <span class="detail-value">${student.mother_name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Mother's Occupation:</span>
+                            <span class="detail-value">${student.mother_occupation || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Guardian Phone:</span>
+                            <span class="detail-value">${student.guardian_phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Guardian Email:</span>
+                            <span class="detail-value">${student.guardian_email || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Annual Income:</span>
+                            <span class="detail-value">${student.annual_income || 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>Educational Background</h4>
+                        <div class="detail-item">
+                            <span class="detail-label">Last School:</span>
+                            <span class="detail-value">${student.last_school}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Board/University:</span>
+                            <span class="detail-value">${student.board_university}</span>
+                        </div><div class="detail-item">
+                            <span class="detail-label">Passing Year:</span>
+                            <span class="detail-value">${student.passing_year}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Percentage/Grade:</span>
+                            <span class="detail-value">${student.percentage}%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Course Applying For:</span>
+                            <span class="detail-value">${student.course_applying}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Quota Category:</span>
+                            <span class="detail-value">${student.quota_category || 'General'}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>Application Status</h4>
+                        <div class="detail-item">
+                            <span class="detail-label">Current Status:</span>
+                            <span class="detail-value">
+                                <span class="status-badge status-${student.status}">
+                                    ${student.status === 'active' ? 'Active' : 'Edit Locked'}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Submitted On:</span>
+                            <span class="detail-value">${formatDate(student.submitted_at)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Last Updated:</span>
+                            <span class="detail-value">${formatDate(student.updated_at || student.submitted_at)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('studentModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        // Open student form for editing
+        async function openForEdit(applicationId) {
+            try {
+                const response = await fetch(`${API_BASE}/student/status/${applicationId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: 'active' })
+                });
+
+                if (response.ok) {
+                    showSuccess('Student form opened for editing');
+                    await loadStudents(); // Refresh the data
+                } else {
+                    showError('Failed to open form for editing');
+                }
+            } catch (error) {
+                console.error('Error opening form for edit:', error);
+                // Update local data as fallback
+                const student = studentsData.find(s => s.application_id === applicationId);
+                if (student) {
+                    student.status = 'active';
+                    updateStatistics();
+                    filterAndDisplayStudents();
+                    showSuccess('Student form opened for editing (offline mode)');
+                } else {
+                    showError('Failed to open form for editing');
+                }
+            }
+        }
+
+        // Lock student form from editing
+        async function lockForEdit(applicationId) {
+            try {
+                const response = await fetch(`${API_BASE}/student/status/${applicationId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: 'edit_locked' })
+                });
+
+                if (response.ok) {
+                    showSuccess('Student form locked from editing');
+                    await loadStudents(); // Refresh the data
+                } else {
+                    showError('Failed to lock form');
+                }
+            } catch (error) {
+                console.error('Error locking form:', error);
+                // Update local data as fallback
+                const student = studentsData.find(s => s.application_id === applicationId);
+                if (student) {
+                    student.status = 'edit_locked';
+                    updateStatistics();
+                    filterAndDisplayStudents();
+                    showSuccess('Student form locked from editing (offline mode)');
+                } else {
+                    showError('Failed to lock form');
+                }
+            }
+        }
+
+        // Refresh data
+        async function refreshData() {
+            await loadStudents();
+            showSuccess('Data refreshed successfully');
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return 'Invalid Date';
+            return date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            showAlert(message, 'success');
+        }
+
+        // Show error message
+        function showError(message) {
+            showAlert(message, 'error');
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            // Remove existing alerts
+            const existingAlert = document.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+
+            // Create new alert
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+
+            // Insert at the top of admin container
+            const container = document.querySelector('.admin-container');
+            container.insertBefore(alert, container.firstChild);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Load demo data (fallback)
+        function loadDemoData() {
+            studentsData = [
+                {
+                    application_id: 'ICRE2024001',
+                    first_name: 'Rahul',
+                    last_name: 'Sharma',
+                    email: 'rahul.sharma@email.com',
+                    phone: '9876543210',
+                    date_of_birth: '2005-03-15',
+                    gender: 'Male',
+                    address: '123 MG Road',
+                    city: 'Mumbai',
+                    pincode: '400001',
+                    father_name: 'Suresh Sharma',
+                    father_occupation: 'Engineer',
+                    mother_name: 'Priya Sharma',
+                    mother_occupation: 'Teacher',
+                    guardian_phone: '9876543211',
+                    guardian_email: 'suresh.sharma@email.com',
+                    annual_income: '500000',
+                    last_school: 'Mumbai Public School',
+                    board_university: 'Maharashtra State Board',
+                    passing_year: '2024',
+                    percentage: '85.5',
+                    course_applying: 'Computer',
+                    quota_category: 'General',
+                    status: 'active',
+                    submitted_at: '2024-01-15T10:30:00Z',
+                    updated_at: '2024-01-15T10:30:00Z'
+                },
+                {
+                    application_id: 'ICRE2024002',
+                    first_name: 'Priya',
+                    last_name: 'Patel',
+                    email: 'priya.patel@email.com',
+                    phone: '9876543212',
+                    date_of_birth: '2005-07-22',
+                    gender: 'Female',
+                    address: '456 SV Road',
+                    city: 'Mumbai',
+                    pincode: '400058',
+                    father_name: 'Ramesh Patel',
+                    father_occupation: 'Business',
+                    mother_name: 'Meera Patel',
+                    mother_occupation: 'Housewife',
+                    guardian_phone: '9876543213',
+                    guardian_email: 'ramesh.patel@email.com',
+                    annual_income: '750000',
+                    last_school: 'St. Xavier\'s High School',
+                    board_university: 'CBSE',
+                    passing_year: '2024',
+                    percentage: '92.3',
+                    course_applying: 'ENTC',
+                    quota_category: 'General',
+                    status: 'edit_locked',
+                    submitted_at: '2024-01-16T14:45:00Z',
+                    updated_at: '2024-01-16T14:45:00Z'
+                },
+                {
+                    application_id: 'ICRE2024003',
+                    first_name: 'Amit',
+                    last_name: 'Kumar',
+                    email: 'amit.kumar@email.com',
+                    phone: '9876543214',
+                    date_of_birth: '2005-11-08',
+                    gender: 'Male',
+                    address: '789 Link Road',
+                    city: 'Mumbai',
+                    pincode: '400050',
+                    father_name: 'Vinod Kumar',
+                    father_occupation: 'Government Service',
+                    mother_name: 'Sunita Kumar',
+                    mother_occupation: 'Nurse',
+                    guardian_phone: '9876543215',
+                    guardian_email: 'vinod.kumar@email.com',
+                    annual_income: '600000',
+                    last_school: 'Ryan International School',
+                    board_university: 'CBSE',
+                    passing_year: '2024',
+                    percentage: '78.9',
+                    course_applying: 'Mechanical',
+                    quota_category: 'OBC',
+                    status: 'active',
+                    submitted_at: '2024-01-17T09:15:00Z',
+                    updated_at: '2024-01-17T09:15:00Z'
+                }
+            ];
+
+            updateStatistics();
+            filterAndDisplayStudents();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('studentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Close modal with Escape key
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Refresh with F5 or Ctrl+R
+            if (event.key === 'F5' || (event.ctrlKey && event.key === 'r')) {
+                event.preventDefault();
+                refreshData();
+            }
+        });
+    </script>
+</body>
+</html>
