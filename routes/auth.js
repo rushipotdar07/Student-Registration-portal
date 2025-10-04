@@ -20,63 +20,6 @@ function generateJWT(user) {
         { expiresIn: '24h' }
     );
 }
-
-// Send OTP for registration
-// router.post('/send-otp', async (req, res) => {
-//     try {
-//         const db = req.app.locals.db;
-//         const { name, email, phone, password } = req.body;
-
-//         // Validation
-//         if (!name || !email || !phone || !password) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'All fields are required'
-//             });
-//         }
-
-//         // Check if user already exists
-//         const [existingUsers] = await db.execute(
-//             'SELECT id FROM users WHERE email = ? OR phone = ?',
-//             [email, phone]
-//         );
-
-//         if (existingUsers.length > 0) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Email or phone number already registered'
-//             });
-//         }
-
-//         // Generate OTP
-//         const otp = generateOTP();
-//         const expires = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-//         // Store OTP and user data temporarily
-//         otpStorage[phone] = {
-//             otp,
-//             expires,
-//             userData: { name, email, phone, password }
-//         };
-
-//         // In production, send OTP via SMS gateway
-//         console.log(`OTP for ${phone}: ${otp}`);
-
-//         res.json({
-//             success: true,
-//             message: 'OTP sent successfully',
-//             otp: otp // Remove this in production
-//         });
-
-//     } catch (error) {
-//         console.error('Error sending OTP:', error);
-//         res.status(500).json({
-//             success: false,
-//             message: 'Internal server error'
-//         });
-//     }
-// });
-
 router.post('/send-otp', async (req, res) => {
     try {
         const db = req.app.locals.db;
@@ -293,61 +236,6 @@ router.post('/verify-otp', async (req, res) => {
         });
     }
 });
-
-
-// // Resend OTP
-// router.post('/resend-otp', (req, res) => {
-//     try {
-//         const { phone } = req.body;
-
-//         if (!phone) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Phone number is required'
-//             });
-//         }
-
-//         // Check if OTP data exists
-//         const otpData = otpStorage[phone];
-//         if (!otpData) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'No pending registration found for this number'
-//             });
-//         }
-
-//         // Generate new OTP
-//         const otp = generateOTP();
-//         const expires = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-//         // Update OTP data
-//         otpStorage[phone].otp = otp;
-//         otpStorage[phone].expires = expires;
-
-//         // In production, send OTP via SMS gateway
-//         console.log(`New OTP for ${phone}: ${otp}`);
-
-//         res.json({
-//             success: true,
-//             message: 'OTP resent successfully',
-//             otp: otp // Remove this in production
-//         });
-
-//     } catch (error) {
-//         console.error('Error resending OTP:', error);
-//         res.status(500).json({
-//             success: false,
-//             message: 'Internal server error'
-//         });
-//     }
-// });
-
-// User login
-
-// Resend OTP
-// Resend OTP
-// Resend OTP
-// Resend OTP
 router.post('/resend-otp', async (req, res) => {
     try {
         const { phone } = req.body;
@@ -404,10 +292,6 @@ router.post('/resend-otp', async (req, res) => {
         });
     }
 });
-
-
-
-
 router.post('/login', async (req, res) => {
     try {
         const db = req.app.locals.db;
